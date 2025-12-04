@@ -1,0 +1,833 @@
+/* Global CSS Variables for consistency and easier theming */
+:root {
+  --background-dark-primary: #020617;
+  --background-dark-secondary: #0b1220;
+  --background-dark-gradient-start: #111827;
+  --text-light: #e5e7eb;
+  --text-muted: #9ca3af;
+  --neon-blue: #38bdf8;
+  --neon-purple: #a855f7;
+  --neon-indigo: #6366f1;
+  --neon-green: #22c55e;
+  --gradient-neon-text: linear-gradient(90deg, var(--neon-blue), var(--neon-indigo), var(--neon-purple));
+  --gradient-neon-btn: radial-gradient(circle at top left, var(--neon-blue), #1d4ed8);
+
+  /* Refined shadow system */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+
+  /* Neon Glows */
+  --glow-blue-sm: 0 0 8px rgba(56, 189, 248, 0.6);
+  --glow-blue-md: 0 0 15px rgba(59, 130, 246, 0.8), 0 0 30px rgba(56, 189, 248, 0.5);
+  --glow-blue-lg: 0 0 25px rgba(59, 130, 246, 1), 0 0 50px rgba(56, 189, 248, 0.7);
+  --glow-green-sm: 0 0 8px rgba(34, 197, 94, 0.7);
+  --glow-purple-sm: 0 0 8px rgba(168, 85, 247, 0.7);
+}
+
+/* Global styles */
+*, *::before, *::after {
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, var(--background-dark-gradient-start) 0%, var(--background-dark-primary) 45%, #020314 100%);
+  background-attachment: fixed; /* Keep background fixed on scroll */
+  color: var(--text-light);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  line-height: 1.65; /* Optimized line height for readability */
+  -webkit-font-smoothing: antialiased; /* Smoother font rendering */
+  -moz-osx-font-smoothing: grayscale; /* Smoother font rendering */
+  text-rendering: optimizeLegibility; /* Further font rendering optimization */
+  overflow-x: hidden; /* Prevent horizontal scroll for animations */
+}
+
+/* Site Title (Kindera) */
+.site-title {
+    font-size: clamp(3.5rem, 7vw, 5.5rem); /* Even larger and more impactful */
+    font-weight: 900;
+    letter-spacing: 0.15em; /* Increased letter spacing */
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: center;
+    background: var(--gradient-neon-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+        0 0 12px rgba(var(--neon-blue), 0.8), /* Stronger blue glow */
+        0 0 25px rgba(var(--neon-indigo), 0.6), /* Stronger indigo glow */
+        0 0 40px rgba(var(--neon-purple), 0.4); /* Stronger purple glow */
+    opacity: 0;
+    transform: translateY(20px) perspective(1000px) rotateX(3deg) scale(0.98); /* More pronounced 3D effect on load */
+    animation: fadeup 0.8s ease-out forwards; /* Slightly longer animation */
+    animation-delay: 0s;
+    margin-bottom: 50px; /* More space below the title */
+}
+
+/* Page Wrapper and Hero Layout */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 100px; /* Adjusted total padding to give more breathing room */
+  overflow: visible !important; /* Ensure content is not clipped */
+}
+.hero-layout {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 32px; /* Remove vertical padding, managed by page-wrapper and title margin */
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  overflow: visible !important; /* Ensure content is not clipped */
+}
+@media (max-width: 960px) {
+  .hero-layout {
+    padding: 0 20px; /* Smaller horizontal padding on mobile */
+  }
+  .site-title {
+      margin-bottom: 40px; /* Smaller gap on mobile */
+  }
+}
+@media (max-width: 480px) {
+    .page-wrapper {
+        padding: 30px 0 80px; /* Reduced bottom padding for smaller screens */
+    }
+    .site-title {
+        white-space: normal; /* Allow title to wrap on very small screens */
+        padding: 0 10px; /* Add some horizontal padding to prevent text sticking to edges */
+        line-height: 1.1;
+        margin-bottom: 30px; /* Further reduce space below title */
+    }
+    .hero-layout {
+        padding: 0 15px; /* Slightly more aggressive padding on very small screens */
+    }
+}
+@media (max-width: 360px) {
+    .page-wrapper {
+        padding: 20px 0 60px; /* Even smaller padding on very narrow screens */
+    }
+    .hero-layout {
+        padding: 0 10px; /* Even tighter padding */
+    }
+}
+
+/* New wrapper for hero-left and hero-right */
+.hero-content-area {
+    width: 100%;
+    display: flex;
+    gap: 64px; /* Increased gap between columns */
+    align-items: center;
+    justify-content: space-between;
+    overflow: visible !important; /* Ensure content is not clipped */
+}
+@media (max-width: 960px) {
+  .hero-content-area {
+    flex-direction: column;
+    text-align: center;
+    gap: 50px; /* Increased vertical gap between stacked hero-left and hero-right */
+  }
+}
+@media (max-width: 768px) {
+  .hero-layout {
+    padding: 0 1rem; /* Adjust padding for tablet/mobile */
+  }
+}
+
+/* Hero Columns */
+.hero-left,
+.hero-right {
+  flex: 1;
+}
+.hero-right {
+  display: flex;
+  justify-content: center;
+}
+
+/* Fade-up Animation for hero content */
+.hero-left,
+.slider-card {
+  opacity: 0;
+  transform: translateY(20px); /* Start further down */
+  animation: fadeup 0.9s ease-out forwards; /* Slower, smoother animation */
+}
+.hero-left {
+  animation-delay: 0.2s; /* Increased delay */
+}
+.slider-card {
+  animation-delay: 0.4s; /* Increased delay */
+}
+@keyframes fadeup {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero Badge */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px; /* Increased gap */
+  padding: 9px 18px; /* More padding */
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.95); /* Slightly more opaque */
+  border: 1px solid rgba(148, 163, 184, 0.5); /* Stronger border */
+  font-size: 14px; /* Larger font */
+  font-weight: 500; /* Medium weight */
+  letter-spacing: 0.1em; /* More prominent letter spacing */
+  text-transform: uppercase;
+  color: var(--text-muted);
+  backdrop-filter: blur(2px); /* Subtle blur for depth */
+  box-shadow: var(--glow-green-sm); /* Add green glow to badge */
+  transition: all 0.25s ease-out; /* Smoother transition */
+}
+.hero-badge::before {
+  content: "";
+  width: 9px; /* Larger dot */
+  height: 9px; /* Larger dot */
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--neon-green) 0%, #166534 70%); /* Deeper green */
+  box-shadow: 0 0 15px rgba(var(--neon-green), 0.9); /* Stronger dot glow */
+}
+.hero-badge:hover {
+    transform: translateY(-3px) scale(1.03); /* More pronounced lift */
+    border-color: rgba(var(--neon-green), 0.8);
+    box-shadow: 0 0 25px rgba(var(--neon-green), 0.7);
+}
+@media (max-width: 480px) {
+    .hero-badge {
+        font-size: 13px; /* Slightly smaller font on mobile */
+        padding: 8px 16px;
+    }
+}
+
+/* Hero Title */
+.hero-title {
+  margin-top: 25px; /* More space */
+  font-size: clamp(2.8rem, 4vw, 4rem); /* Slightly larger */
+  line-height: 1.2;
+  font-weight: 800; /* Bolder */
+  letter-spacing: -0.02em; /* Tighter letter spacing for larger text */
+  text-shadow: var(--glow-blue-sm); /* Subtle text shadow */
+}
+.hero-title span {
+  background: var(--gradient-neon-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: clamp(2.2rem, 8vw, 2.8rem); /* Adjust clamp for smaller screens */
+        margin-top: 20px;
+    }
+}
+
+
+/* Hero Text */
+.hero-text {
+  margin-top: 18px; /* More space */
+  max-width: 520px; /* Slightly wider */
+  color: var(--text-muted);
+  font-size: 1.05rem; /* Larger font */
+  line-height: 1.75; /* Improved readability */
+}
+@media (max-width: 960px) {
+  .hero-text {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%; /* Constrain on smaller screens */
+  }
+}
+@media (max-width: 480px) {
+    .hero-text {
+        font-size: 0.95rem; /* Slightly smaller font for mobile */
+        margin-top: 15px;
+        max-width: 100%; /* Allow full width if needed, controlled by parent padding */
+        padding: 0 5px; /* Add internal padding */
+    }
+}
+
+/* Hero Buttons */
+.hero-buttons {
+  margin-top: 35px; /* More space */
+  display: flex;
+  gap: 18px; /* Increased gap */
+  flex-wrap: wrap;
+}
+.btn {
+  border-radius: 999px;
+  padding: 14px 32px; /* More padding for a bolder, more substantial look */
+  border: 1px solid transparent;
+  font-size: 1.05rem; /* Slightly larger font */
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* More sophisticated easing */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.6); /* More prominent text glow */
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  will-change: transform, box-shadow; /* Optimize animations */
+}
+.btn:focus-visible {
+    box-shadow: 0 0 0 4px rgba(var(--neon-blue), 0.7); /* Thicker, clearer focus ring */
+    border-color: var(--neon-blue);
+}
+/* Subtle shimmer effect on buttons */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 0;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.18); /* Brighter shimmer */
+    transform: rotate(45deg);
+    transition: width 0.4s ease-out; /* Slower shimmer */
+    z-index: 1;
+}
+.btn:hover::before {
+    width: 220%; /* Cover more area */
+}
+.btn span {
+    position: relative;
+    z-index: 2;
+}
+
+.primary-btn {
+  background: var(--gradient-neon-btn);
+  color: white;
+  box-shadow:
+    var(--glow-blue-md),
+    inset 0 0 12px rgba(255, 255, 255, 0.2); /* More visible inner glow */
+  border: 1px solid rgba(var(--neon-blue), 0.9); /* Stronger border */
+}
+.primary-btn:hover {
+  transform: translateY(-4px); /* More pronounced lift */
+  box-shadow:
+    var(--glow-blue-lg),
+    inset 0 0 18px rgba(255, 255, 255, 0.3);
+  border-color: var(--neon-blue);
+}
+.primary-btn:active {
+    transform: translateY(0);
+    box-shadow:
+        0 0 20px rgba(59, 130, 246, 0.7),
+        0 0 40px rgba(56, 189, 248, 0.4),
+        inset 0 0 15px rgba(0,0,0,0.5);
+}
+
+.secondary-btn {
+  background: rgba(15, 23, 42, 0.85); /* More opaque background */
+  color: var(--text-light);
+  border-color: rgba(148, 163, 184, 0.7); /* Stronger default border */
+  box-shadow:
+    var(--shadow-md),
+    inset 0 0 8px rgba(255, 255, 255, 0.1); /* Stronger inner glow */
+}
+.secondary-btn:hover {
+  border-color: var(--neon-blue);
+  color: #e0f2fe;
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 25px rgba(56, 189, 248, 0.6), /* Blue neon glow on hover */
+    0 0 15px rgba(148, 163, 184, 0.6),
+    inset 0 0 10px rgba(255, 255, 255, 0.15);
+  text-shadow: 0px 0px 12px rgba(56, 189, 248, 0.9);
+}
+.secondary-btn:active {
+    transform: translateY(0);
+    box-shadow:
+        var(--shadow-md),
+        inset 0 0 10px rgba(0,0,0,0.5);
+    border-color: rgba(148, 163, 184, 0.7);
+    color: var(--text-light);
+    text-shadow: none;
+}
+@media (max-width: 480px) {
+    .hero-buttons {
+        gap: 12px; /* Reduce gap between buttons */
+        justify-content: center; /* Center buttons when they wrap */
+    }
+    .btn {
+        padding: 12px 25px; /* Slightly smaller buttons on very small screens */
+        font-size: 0.95rem;
+        flex-grow: 1; /* Allow buttons to grow to fill space if wrapped */
+        max-width: 200px; /* Limit max width for flex-grow */
+    }
+}
+@media (max-width: 360px) {
+    .hero-buttons {
+        flex-direction: column; /* Stack buttons vertically on very small screens */
+        gap: 10px;
+    }
+    .btn {
+        width: 100%; /* Make buttons full width when stacked */
+        max-width: none;
+    }
+}
+
+
+/* Slider Card */
+.slider-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
+  padding: 20px 20px 24px;
+  background: radial-gradient(circle at top left, #0b1220 0%, #020617 55%, #020314 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.9),
+    0 0 40px rgba(56, 189, 248, 0.45),
+    0 0 80px rgba(79, 70, 229, 0.45);
+  position: relative;
+  /* overflow: hidden; Removed from here, kept on slider-viewport */
+}
+.slider-viewport {
+  position: relative;
+  padding-top: 65%; /* Creates an aspect ratio (height is 65% of width, for approx. 16:10 or 16:9 like feel) */
+  border-radius: 18px;
+  overflow: hidden; /* Essential for the image slider effect */
+  background: #020617;
+  border: 1px solid rgba(30, 64, 175, 0.7);
+}
+.slider-image {
+  position: absolute; /* Essential for slider */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+}
+.slider-image.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.slider-caption {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+.slider-caption .highlight {
+  color: #e0f2fe;
+}
+
+@media (max-width: 768px) { /* Tablet Portrait and smaller */
+    .slider-card { /* This is the "hero-image" equivalent */
+        width: 90%;
+        max-width: 350px; /* User's specified max-width */
+        margin: 0 auto; /* Center it */
+        margin-top: 1.5rem; /* Specific margin from user */
+        display: block;
+        /* position: static !important; -- Not applied to avoid breaking slider */
+    }
+}
+
+@media (max-width: 480px) { /* Mobile */
+    .slider-card {
+        padding: 15px 15px 20px;
+        border-radius: 20px;
+        /* width: 90%; max-width: 350px; margin: 0 auto; margin-top: 1.5rem; are inherited from 768px */
+    }
+    .slider-viewport {
+        padding-top: 70%; /* Adjust aspect ratio for slightly taller appearance on mobile */
+        border-radius: 15px;
+    }
+    .slider-caption {
+        font-size: 0.75rem; /* Smaller caption text */
+    }
+}
+@media (max-width: 360px) { /* Very small mobile */
+    .slider-card {
+        padding: 10px 10px 15px;
+        border-radius: 15px;
+        max-width: calc(100% - 20px); /* Adjust margin for very small screens, overrides 350px if needed */
+        margin: 0 auto;
+        margin-top: 1.5rem;
+    }
+    .slider-viewport {
+        padding-top: 75%; /* Make it slightly taller relative to width on very small screens */
+    }
+}
+
+
+/* Donate Modal & QR Modal - Shared Styles for Backdrop and Modal Box */
+.donate-modal-backdrop,
+.qr-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.9); /* Even darker backdrop */
+  backdrop-filter: blur(10px); /* Stronger blur */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 60; /* Higher z-index for modals */
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+.donate-modal-backdrop.active,
+.qr-modal-backdrop.active {
+  display: flex;
+  opacity: 1;
+}
+
+.donate-modal,
+.qr-modal {
+  width: 100%;
+  max-width: 420px; /* Slightly wider modal */
+  padding: 30px 25px 35px; /* More generous padding */
+  border-radius: 28px; /* More rounded corners */
+  background: radial-gradient(circle at top left, #050a1b 0%, var(--background-dark-primary) 55%, #020314 100%);
+  border: 1px solid rgba(148, 163, 184, 0.5); /* Stronger, more visible border */
+  box-shadow:
+    var(--shadow-xl),
+    var(--glow-blue-lg), /* More pronounced overall glow */
+    0 0 0 2px rgba(15, 23, 42, 0.9); /* Inner dark border */
+  color: var(--text-light);
+  position: relative;
+  text-align: center; /* Center content by default */
+  transform: translateY(40px) scale(0.9); /* Start further down and smaller */
+  opacity: 0;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  will-change: transform, opacity;
+}
+.donate-modal-backdrop.active .donate-modal,
+.qr-modal-backdrop.active .qr-modal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+@media (max-width: 480px) {
+    .donate-modal,
+    .qr-modal {
+        padding: 25px 18px 30px; /* Reduce padding slightly */
+        margin: 0 15px; /* Add some horizontal margin to prevent touching edges */
+        border-radius: 20px;
+    }
+    .donate-modal h2,
+    .qr-modal h2 {
+        font-size: 1.4rem; /* Slightly smaller heading */
+    }
+    .modal-text {
+        font-size: 0.95rem; /* Slightly smaller text */
+        margin-bottom: 20px;
+    }
+    .modal-small-text {
+        font-size: 0.8rem; /* Smaller note text */
+        margin-top: 15px;
+    }
+}
+
+
+/* Modal specific styles */
+.donate-modal h2,
+.qr-modal h2 {
+  font-size: 1.6rem; /* Larger heading */
+  font-weight: 700;
+  margin-bottom: 12px; /* More space below */
+  background: var(--gradient-neon-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(var(--neon-blue), 0.6); /* Stronger heading glow */
+}
+.modal-text {
+  font-size: 1.05rem; /* Larger text */
+  color: var(--text-muted);
+  margin-bottom: 25px; /* More space below */
+  line-height: 1.6;
+}
+.modal-small-text {
+    font-size: 0.85rem; /* Slightly larger */
+    color: #8892a0; /* Slightly lighter muted text */
+    margin-top: 20px;
+    line-height: 1.5;
+}
+
+.modal-qty-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px; /* Increased gap */
+  margin-bottom: 20px; /* More space below */
+}
+.modal-qty-row button,
+.modal-qty-row input {
+  height: 44px; /* Taller controls */
+}
+.modal-qty-row button {
+  width: 44px; /* Wider buttons */
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.95); /* Even stronger border */
+  background: #080e22; /* Even darker background */
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 1.3rem; /* Larger font */
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.25s ease-out;
+  box-shadow: var(--shadow-sm);
+}
+.modal-qty-row button:hover {
+    background: #1a2234; /* Lighter on hover */
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: var(--shadow-md), var(--glow-blue-sm);
+}
+.modal-qty-row input {
+  width: 90px; /* Wider input */
+  border-radius: 999px;
+  padding: 0 15px; /* More padding */
+  text-align: center;
+  border: 1px solid rgba(55, 65, 81, 0.98); /* Stronger border */
+  background: #080e22;
+  color: var(--text-light);
+  font-size: 1.1rem; /* Larger font */
+  font-weight: 500;
+  transition: all 0.25s ease-out;
+  -moz-appearance: textfield;
+}
+.modal-qty-row input:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: var(--glow-blue-sm);
+}
+.modal-qty-row input::-webkit-outer-spin-button,
+.modal-qty-row input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.modal-amount {
+  font-size: 1.2rem; /* Larger amount text */
+  margin-bottom: 25px; /* More space */
+  font-weight: 500;
+}
+.modal-amount span {
+  color: var(--neon-blue);
+  font-weight: 700;
+  text-shadow: var(--glow-blue-sm);
+}
+.modal-close {
+  position: absolute;
+  top: 18px; /* Adjusted position */
+  right: 18px; /* Adjusted position */
+  background: transparent;
+  border: none;
+  color: #8892a0; /* Muted color */
+  font-size: 1.5rem; /* Larger close icon */
+  cursor: pointer;
+  z-index: 61; /* Ensure above modal content */
+  transition: color 0.2s ease-out, transform 0.2s ease-out;
+}
+.modal-close:hover {
+  color: var(--text-light);
+  transform: rotate(90deg) scale(1.1); /* Spin and slightly grow on hover */
+}
+/* Center primary button in modal */
+.donate-modal .primary-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content; /* Ensure button doesn't stretch */
+}
+@media (max-width: 480px) {
+    .modal-qty-row {
+        gap: 10px; /* Reduce gap in quantity controls */
+        margin-bottom: 15px;
+    }
+    .modal-qty-row button,
+    .modal-qty-row input {
+        height: 40px; /* Slightly smaller controls */
+        width: 40px; /* For buttons */
+        font-size: 1.2rem;
+    }
+    .modal-qty-row input {
+        width: 70px; /* Adjust width for input */
+        font-size: 1rem;
+    }
+    .modal-amount {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+    .modal-close {
+        font-size: 1.3rem; /* Slightly smaller close icon */
+        top: 15px;
+        right: 15px;
+    }
+}
+
+
+/* QR Modal Specific */
+.qr-code-container {
+    padding: 22px; /* More padding */
+    background-color: #f8fafc;
+    border-radius: 18px; /* More rounded */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    max-width: fit-content;
+    box-shadow: var(--shadow-xl), var(--glow-blue-md); /* Stronger blue glow */
+}
+#upi-qr-image {
+    display: block;
+    max-width: 220px; /* Larger QR code */
+    height: auto;
+    border-radius: 10px; /* Slight rounded corners for QR image */
+}
+@media (max-width: 480px) {
+    .qr-code-container {
+        padding: 15px; /* Reduce QR container padding */
+        border-radius: 15px;
+        margin: 15px auto;
+    }
+    #upi-qr-image {
+        max-width: 180px; /* Slightly smaller QR code image */
+    }
+}
+@media (max-width: 360px) {
+    .qr-code-container {
+        padding: 10px;
+        border-radius: 12px;
+    }
+    #upi-qr-image {
+        max-width: 150px; /* Further reduce QR size for very small screens */
+    }
+}
+
+
+/* Floating Contact Buttons */
+.floating-contact-buttons {
+    position: fixed;
+    bottom: 125px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 25px; /* Increased gap */
+    z-index: 50;
+}
+
+/* Keyframe animation for floating effect */
+@keyframes fab-float {
+  0% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); } /* More pronounced float */
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+.fab-icon {
+    width: 65px; /* Larger icons */
+    height: 65px; /* Larger icons */
+    border-radius: 50%;
+    background: var(--background-dark-secondary);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem; /* Larger emoji */
+    text-decoration: none;
+    box-shadow: var(--shadow-xl); /* Deeper initial shadow */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother, longer transition */
+    border: 1px solid rgba(148, 163, 184, 0.5); /* Stronger border */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* More prominent emoji glow */
+    animation: fab-float 4s ease-in-out infinite; /* Slower animation */
+    will-change: transform, box-shadow;
+}
+
+/* Delay for individual floating icons */
+.floating-contact-buttons .fab-icon:nth-child(2) {
+  animation-delay: 0.8s; /* Increased delay */
+}
+.floating-contact-buttons .fab-icon:nth-child(3) {
+  animation-delay: 1.6s; /* Increased delay */
+}
+
+.fab-icon:hover {
+    transform: translateY(-12px) scale(1.18); /* More pronounced lift and scale */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.9); /* Even deeper shadow on hover */
+    z-index: 51; /* Bring hovered item to front */
+}
+
+.fab-icon.call {
+    border-color: rgba(var(--neon-blue), 0.8);
+    box-shadow:
+        var(--glow-blue-md),
+        0 0 0 1px rgba(var(--neon-blue), 0.3);
+    text-shadow: 0 0 18px rgba(var(--neon-blue), 0.9);
+}
+.fab-icon.call:hover {
+    box-shadow:
+        var(--glow-blue-lg),
+        0 0 0 2px rgba(var(--neon-blue), 0.5);
+}
+
+.fab-icon.whatsapp {
+    border-color: rgba(var(--neon-green), 0.8);
+    box-shadow:
+        0 0 15px rgba(var(--neon-green), 0.5),
+        0 0 30px rgba(var(--neon-green), 0.3),
+        0 0 0 1px rgba(var(--neon-green), 0.3);
+    text-shadow: 0 0 18px rgba(var(--neon-green), 0.9);
+}
+.fab-icon.whatsapp:hover {
+    box-shadow:
+        0 0 25px rgba(var(--neon-green), 0.8),
+        0 0 50px rgba(var(--neon-green), 0.5),
+        0 0 0 2px rgba(var(--neon-green), 0.5);
+}
+
+.fab-icon.mail {
+    border-color: rgba(var(--neon-purple), 0.8);
+    box-shadow:
+        0 0 15px rgba(var(--neon-purple), 0.5),
+        0 0 30px rgba(var(--neon-purple), 0.3),
+        0 0 0 1px rgba(var(--neon-purple), 0.3);
+    text-shadow: 0 0 18px rgba(var(--neon-purple), 0.9);
+}
+.fab-icon.mail:hover {
+    box-shadow:
+        0 0 25px rgba(var(--neon-purple), 0.8),
+        0 0 50px rgba(var(--neon-purple), 0.5),
+        0 0 0 2px rgba(var(--neon-purple), 0.5);
+}
+
+/* Responsive adjustments for floating buttons */
+@media (max-width: 480px) {
+    .floating-contact-buttons {
+        gap: 20px; /* Adjusted gap on mobile */
+        bottom: 115px; /* Slightly higher to avoid browser UI on some phones */
+    }
+    .fab-icon {
+        width: 60px; /* Slightly smaller on mobile */
+        height: 60px; /* Slightly smaller on mobile */
+        font-size: 2rem; /* Adjust font size for smaller icons */
+    }
+}
+@media (max-width: 360px) {
+    .floating-contact-buttons {
+        gap: 15px; /* Further adjusted gap for very small phones */
+        bottom: 90px; /* More adjustment for very small screens and common browser bottom bars */
+    }
+    .fab-icon {
+        width: 55px; /* Even smaller on very small phones */
+        height: 55px;
+        font-size: 1.8rem;
+    }
+}

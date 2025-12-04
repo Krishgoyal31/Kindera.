@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warm Hearts Blanket Drive</title>
+    <!-- Google Font: Inter for a modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="hero-layout">
+            <div class="site-title">Kindera</div>
+            <div class="hero-content-area">
+                <div class="hero-left">
+                    <div class="hero-badge">spread warmth. save lives.</div>
+                    <h1 class="hero-title">
+                        bring warmth to<br />
+                        someone’s <span>winter night.</span>
+                    </h1>
+                    <p class="hero-text">
+                        the warm hearts blanket drive is dedicated to providing warmth and
+                        protection from harsh winter nights. your blanket donation makes a
+                        direct impact on the lives of those in need.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn primary-btn" id="open-donate-modal">donate now</button>
+                        <button class="btn secondary-btn" id="show-qr">show upi qr</button>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="slider-card">
+                        <div class="slider-viewport">
+                            <!-- js will insert <img> elements here -->
+                        </div>
+                        <div class="slider-caption">
+                            <!-- Removed content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="donate-modal-backdrop" id="donate-modal">
+        <div class="donate-modal">
+            <button class="modal-close" id="close-modal">&times;</button>
+            <h2>donate blankets</h2>
+            <p class="modal-text">
+                each blanket costs ₹400. choose how many blankets you want to donate.
+            </p>
+            <div class="modal-qty-row">
+                <button id="modal-decrease">−</button>
+                <input type="number" id="modal-quantity" value="1" min="1" max="100" />
+                <button id="modal-increase">+</button>
+            </div>
+            <p class="modal-amount">
+                total amount: <span id="modal-total">₹400</span>
+            </p>
+            <button class="btn primary-btn" id="modal-pay-btn">
+                pay via upi
+            </button>
+        </div>
+    </div>
+
+    <!-- UPI QR Code Modal -->
+    <div class="qr-modal-backdrop" id="qr-modal">
+        <div class="qr-modal">
+            <button class="modal-close" id="close-qr-modal">&times;</button>
+            <h2>Scan to Donate</h2>
+            <p class="modal-text">Open your UPI app and scan the QR code.</p>
+            <div class="qr-code-container">
+                <img id="upi-qr-image" src="" alt="UPI QR Code for donation">
+            </div>
+            <p class="modal-small-text">Note: Amount will be filled automatically for the chosen quantity in the donate modal, or you can adjust it manually.</p>
+        </div>
+    </div>
+
+    <!-- Floating Contact Buttons -->
+    <div class="floating-contact-buttons">
+        <a href="tel:+919729504524" class="fab-icon call" aria-label="Call Us">📞</a>
+        <a
+            href="https://wa.me/919729504524?text=hi%20i%20want%20to%20donate%20blankets"
+            class="fab-icon whatsapp"
+            target="_blank"
+            rel="noopener"
+            aria-label="WhatsApp Us"
+        >💬</a>
+        <a href="mailto:krishgoyal3101@gmail.com" class="fab-icon mail" aria-label="Mail Us">📧</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
