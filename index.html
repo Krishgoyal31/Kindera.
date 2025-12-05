@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
 </head>
 <body>
     <div class="page-wrapper">
@@ -27,11 +30,8 @@
                     </p>
                     <div class="hero-buttons">
                         <button class="btn primary-btn" id="open-donate-modal">donate now</button>
-                        <button class="btn secondary-btn" id="show-qr">show upi qr</button>
+                        <button class="btn secondary-btn" id="show-qr">Manual/Fallback Donation</button>
                     </div>
-                    <p class="device-hint">
-                        If paying on desktop, please use 'Show UPI QR' and scan with your mobile app.
-                    </p>
                 </div>
                 <div class="hero-right">
                     <div class="slider-card">
@@ -111,7 +111,7 @@
                 total amount: <span id="modal-total">₹101</span>
             </p>
             <button class="btn primary-btn" id="modal-pay-btn">
-                pay via upi
+                Generate QR & Pay
             </button>
         </div>
     </div>
@@ -120,24 +120,28 @@
         <div class="qr-modal">
             <button class="modal-close" id="close-qr-modal">&times;</button>
             <h2>Scan to Donate</h2>
-            <p class="modal-text">Open your UPI app and scan the QR code.</p>
+            <p class="modal-text" id="qr-timer-text">
+                This code is valid for 60 seconds.
+            </p>
             <div class="qr-code-container">
                 <img id="upi-qr-image" src="" alt="UPI QR Code for donation">
             </div>
-            <p class="modal-small-text">Note: For a variable amount, please manually enter the amount in your UPI app. This QR is generic.</p>
+            <p class="modal-amount-display" id="qr-amount-text"></p>
+            
+            <p class="modal-small-text" id="qr-note"></p>
         </div>
     </div>
 
     <div class="floating-contact-buttons">
-        <a href="tel:+917678459202" class="fab-icon call" aria-label="Call Us">📞</a>
+        <a href="tel:+917678459202" class="fab-icon call" aria-label="Call Us"><i class="fa-solid fa-phone"></i></a>
         <a
             href="https://wa.me/917678459202?text=hi%20i%20want%20to%20donate%20blankets"
             class="fab-icon whatsapp"
             target="_blank"
             rel="noopener"
             aria-label="WhatsApp Us"
-        >💬</a>
-        <a href="mailto:krishgoyal3101@gmail.com" class="fab-icon mail" aria-label="Mail Us">📧</a>
+        ><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="mailto:krishgoyal3101@gmail.com" class="fab-icon mail" aria-label="Mail Us"><i class="fa-solid fa-envelope"></i></a>
     </div>
 
     <script src="script.js"></script>
