@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   // UPI Constants
-  const BLANKET_PRICE = 400;              // ₹ per blanket
-  const UPI_ID = "krishgoyal3101@okhdfcbank";        // todo: replace with real vpa
-  const UPI_NAME = "Kindera"     // todo: replace with actual name
+  const BLANKET_PRICE = 101;              // ₹ per blanket
+  const UPI_ID = "krishgoyal3101@okhdfcbank";
+  const UPI_NAME = "Kindera";
+
+  // Goal Tracking Constants (NEW)
+  const GOAL_BLANKETS = 500;
+  // NOTE: This value is hardcoded for the front-end demo. 
+  // In a real application, you would fetch this value from a backend/API.
+  let currentDonatedBlankets = 0; 
 
   // UPI URL Helper Function
   function createUpiUrl(amount, note) {
@@ -16,11 +22,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // QR Code Image Generator Function
   function generateQrCodeImage(data) {
-    // Using a public QR code API
-    // Documentation: https://goqr.me/api/
-    // Example: https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=your-upi-link
-    return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(data)}`; // Increased QR size
+    // Increased QR size in URL query
+    return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(data)}`;
   }
+
+  // --- Goal Tracker Logic (NEW) ---
+  const currentBlanketsSpan = document.getElementById("current-blankets");
+  const goalBar = document.querySelector(".goal-bar");
+
+  function updateGoalTracker() {
+      if (!currentBlanketsSpan || !goalBar) return;
+
+      // Update Text with current value (formatted)
+      currentBlanketsSpan.textContent = currentDonatedBlankets.toLocaleString();
+
+      // Calculate Percentage and Cap at 100%
+      let percentage = (currentDonatedBlankets / GOAL_BLANKETS) * 100;
+      percentage = Math.min(percentage, 100);
+
+      // Update Bar Width with a smooth transition (handled by CSS)
+      goalBar.style.width = `${percentage}%`;
+  }
+
+  // Initial call to display the starting value (0)
+  updateGoalTracker();
+
 
   // Image Slider Logic
   const sliderImagesSrc = [
@@ -72,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (qty > 100) qty = 100; // Max quantity
     modalQtyInput.value = qty;
     const total = qty * BLANKET_PRICE;
-    modalTotalSpan.textContent = `₹${total}`;
+    modalTotalSpan.textContent = `₹${total.toLocaleString()}`; // Used toLocaleString for better formatting
   }
 
   if (donateBtn && modalBackdrop) {
@@ -120,12 +146,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const total = qty * BLANKET_PRICE;
         const note = `Blanket donation (${qty} blankets) for Warm Hearts`;
         const upiUrl = createUpiUrl(total, note);
+        
+        // NOTE: If payment were confirmed, you would update the goal here:
+        // currentDonatedBlankets += qty;
+        // updateGoalTracker();
+        
         window.location.href = upiUrl; // opens upi app on mobile
       });
   }
 
 
-  // UPI QR Code Modal Logic
+  // UPI QR Code Modal Logic (Updated to use dynamic amount)
   const showQrBtn = document.getElementById("show-qr");
   const qrModalBackdrop = document.getElementById("qr-modal");
   const closeQrModalBtn = document.getElementById("close-qr-modal");
@@ -133,12 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (showQrBtn && qrModalBackdrop && upiQrImage) {
     showQrBtn.addEventListener("click", () => {
-      // Generate UPI link for the QR code. We can use a default amount
-      // or the currently selected amount from the donate modal if it was open last.
-      // For a static QR, a default 1 INR or 0 amount with a generic note is common.
-      const defaultQrAmount = 1; // Or current modalQtyInput.value * BLANKET_PRICE if preferred to dynamically fill
-      const qrNote = "Donation for Warm Hearts Blanket Drive";
-      const upiLink = createUpiUrl(defaultQrAmount, qrNote);
+      // Use the currently selected amount for the QR code
+      const currentQty = parseInt(modalQtyInput.value) || 1;
+      const currentAmount = currentQty * BLANKET_PRICE;
+
+      const qrNote = `Donation of ${currentQty} blanket(s) for Warm Hearts`;
+      const upiLink = createUpiUrl(currentAmount, qrNote);
 
       upiQrImage.src = generateQrCodeImage(upiLink);
       qrModalBackdrop.classList.add("active");
