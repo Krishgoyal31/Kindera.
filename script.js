@@ -2,15 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // UPI Constants
     const BLANKET_PRICE = 101; // ₹ per blanket
 
-    // ✅ Put YOUR mobile number here (10 digits)
-    const UPI_MOBILE = "9729504524";
-
-    // ✅ Put the correct suffix here (@upi / @ybl / @okhdfcbank / @axl / @paytm etc.)
-    const UPI_HANDLE_SUFFIX = "@upi";
-
-    // Auto-generated full UPI ID from mobile + suffix
-    const UPI_ID = `${UPI_MOBILE}${UPI_HANDLE_SUFFIX}`;
-    const UPI_NAME = "Kindera";
+    // ✅ Your working UPI ID
+    const UPI_ID = "9729504524@upi";
+    const UPI_NAME = "KRISH GOYAL";
 
     // Goal Tracking Constants
     const GOAL_BLANKETS = 500;
@@ -19,28 +13,26 @@ document.addEventListener("DOMContentLoaded", () => {
     // Static QR
     const STATIC_QR_IMAGE_SRC = "qr.png";
 
-    // UPI URL Helper (generic UPI link)
-    function createUpiUrl(amount, note) {
+    // UPI URL Helper (NO fixed amount → behaves like manual send)
+    function createUpiUrl(note) {
         const pa = encodeURIComponent(UPI_ID);
         const pn = encodeURIComponent(UPI_NAME);
-        const am = encodeURIComponent(amount);
         const tn = encodeURIComponent(note);
         const cu = "INR";
-        return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=${cu}`;
+        // ❗ No `am=` here on purpose
+        return `upi://pay?pa=${pa}&pn=${pn}&tn=${tn}&cu=${cu}`;
     }
 
-    // Open UPI / Google Pay (mobile only) - stable version
+    // Open UPI / Google Pay (mobile only)
     function openUpiOnMobile(upiUrl) {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
         const isAndroid = /Android/i.test(ua);
         const isIOS = /iPhone|iPad|iPod/i.test(ua);
 
-        // Directly open UPI URL. GPay / PhonePe / Paytm will catch this.
         if (isAndroid || isIOS) {
             window.location.href = upiUrl;
             return;
         }
-
         // Non-mobile handled separately (desktop → show QR)
     }
 
@@ -109,8 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!modalQtyInput || !modalTotalSpan) return;
 
         let qty = parseInt(modalQtyInput.value) || 1;
-        
-        // Ensure buttons reflect the correct boundaries
         if (modalDecrease) modalDecrease.disabled = (qty <= 1);
         if (modalIncrease) modalIncrease.disabled = (qty >= 100);
 
@@ -189,28 +179,34 @@ document.addEventListener("DOMContentLoaded", () => {
             modalPayBtn.innerHTML = "Opening payment app...";
 
             const note = `Blanket donation (${qty} blankets) for Warm Hearts`;
-            const upiUrl = createUpiUrl(total, note);
+            const upiUrl = createUpiUrl(note);
 
             const ua = navigator.userAgent || navigator.vendor || window.opera;
             const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
 
             if (isMobile) {
-                // Mobile → open UPI (Google Pay / others)
+                // Mobile → open UPI
                 openUpiOnMobile(upiUrl);
 
-                // Feedback
+                // Tell donor the exact amount they must enter
                 setTimeout(() => {
                     alert(
-                        "Thank you for your donation! ❤️\n\n" +
-                        "Please complete the payment of ₹" +
-                        total.toLocaleString() +
-                        " in your UPI app.\nContact us if you face any issues."
+                        "UPI app opened.\n\n" +
+                        "Please enter exactly ₹" + total.toLocaleString() +
+                        " and complete the payment to:\n\n" +
+                        UPI_ID + " (" + UPI_NAME + ").\n\n" +
+                        "Thank you for your donation ❤️"
                     );
                     modalBackdrop.classList.remove("active");
-                }, 2000);
+                }, 1500);
             } else {
                 // Desktop → show QR fallback
-                alert("UPI apps work only on mobile. Please scan this QR with your UPI app.");
+                alert(
+                    "UPI apps work only on mobile.\n\n" +
+                    "Scan the QR with your UPI app and pay ₹" +
+                    total.toLocaleString() +
+                    " to " + UPI_ID + "."
+                );
 
                 if (qrModalBackdrop && upiQrImage) {
                     upiQrImage.src = STATIC_QR_IMAGE_SRC;
@@ -226,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 modalPayBtn.innerHTML = "pay via upi";
             }, 3000);
 
-            // Later you can update:
+            // Later you can track:
             // currentDonatedBlankets += qty;
             // updateGoalTracker();
         });
