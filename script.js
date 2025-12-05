@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // UPI Constants
     const BLANKET_PRICE = 101; // ₹ per blanket
-    const UPI_ID = "krishgoyal3101@okhdfcbank";
+    const UPI_ID = "9729504524@superyes";
     const UPI_NAME = "Kindera";
 
     // Goal Tracking Constants
