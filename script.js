@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Goal Tracking Constants
     const GOAL_BLANKETS = 500;
-    let currentDonatedBlankets = 0;
+    let currentDonatedBlankets = 1;
 
     // Static QR
     const STATIC_QR_IMAGE_SRC = "qr.png";
