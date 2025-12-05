@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Goal Tracking Constants
     const GOAL_BLANKETS = 500;
-    let currentDonatedBlankets = 0; 
+    let currentDonatedBlankets = 2; 
 
     // Static QR (Fallback QR, assumes image exists)
     const STATIC_QR_IMAGE_SRC = "qr.png"; 
