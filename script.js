@@ -1,12 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
     // UPI Constants
     const BLANKET_PRICE = 101; // ₹ per blanket
-    const UPI_ID = "ritikranaagra82@oksbi";
+
+    // ✅ Put YOUR mobile number here (10 digits)
+    const UPI_MOBILE = "9729504524";
+
+    // ✅ Put the correct suffix here (@upi / @ybl / @okhdfcbank / @axl / @paytm etc.)
+    const UPI_HANDLE_SUFFIX = "@upi";
+
+    // Auto-generated full UPI ID from mobile + suffix
+    const UPI_ID = `${UPI_MOBILE}${UPI_HANDLE_SUFFIX}`;
     const UPI_NAME = "Kindera";
 
     // Goal Tracking Constants
     const GOAL_BLANKETS = 500;
-    let currentDonatedBlankets = 1;
+    let currentDonatedBlankets = 0; 
 
     // Static QR
     const STATIC_QR_IMAGE_SRC = "qr.png";
@@ -21,36 +29,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=${cu}`;
     }
 
-    // Open UPI / Google Pay (mobile only)
+    // Open UPI / Google Pay (mobile only) - stable version
     function openUpiOnMobile(upiUrl) {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
         const isAndroid = /Android/i.test(ua);
         const isIOS = /iPhone|iPad|iPod/i.test(ua);
 
-        // Android → use Google Pay intent (preferred), fallback to generic UPI
-        if (isAndroid) {
-            const intentUrl =
-                "intent://" +
-                upiUrl.replace("upi://", "") +
-                "#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end";
-
-            // Try Google Pay intent first
-            window.location.href = intentUrl;
-
-            // Small fallback: after a short delay, try generic UPI URL
-            setTimeout(() => {
-                window.location.href = upiUrl;
-            }, 1500);
-            return;
-        }
-
-        // iOS → generic UPI link (will open supported UPI app)
-        if (isIOS) {
+        // Directly open UPI URL. GPay / PhonePe / Paytm will catch this.
+        if (isAndroid || isIOS) {
             window.location.href = upiUrl;
             return;
         }
 
-        // Non-mobile handled outside (desktop → show QR)
+        // Non-mobile handled separately (desktop → show QR)
     }
 
     // --- Goal Tracker Logic ---
@@ -118,9 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!modalQtyInput || !modalTotalSpan) return;
 
         let qty = parseInt(modalQtyInput.value) || 1;
-        if (qty < 1) qty = 1;
-        if (qty > 100) qty = 100;
-        modalQtyInput.value = qty;
+        
+        // Ensure buttons reflect the correct boundaries
+        if (modalDecrease) modalDecrease.disabled = (qty <= 1);
+        if (modalIncrease) modalIncrease.disabled = (qty >= 100);
 
         const total = qty * BLANKET_PRICE;
         modalTotalSpan.textContent = `₹${total.toLocaleString()}`;
@@ -162,18 +154,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // --- Input Validation ---
     if (modalQtyInput) {
-        modalQtyInput.addEventListener("input", updateModalTotal);
+        modalQtyInput.addEventListener("input", (e) => {
+            let val = parseInt(e.target.value);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 100) val = 100;
+            e.target.value = val;
+            updateModalTotal();
+        });
     }
 
-    // --- QR Modal Elements (used for fallback too) ---
+    // --- QR Modal Elements ---
     const showQrBtn = document.getElementById("show-qr");
     const qrModalBackdrop = document.getElementById("qr-modal");
     const closeQrModalBtn = document.getElementById("close-qr-modal");
     const upiQrImage = document.getElementById("upi-qr-image");
 
-    // Pay Button Logic (Google Pay + fallback)
-    if (modalPayBtn && modalQtyInput) {
+    // Pay Button Logic
+    if (modalPayBtn && modalQtyInput && modalBackdrop) {
         modalPayBtn.addEventListener("click", () => {
             let qty = parseInt(modalQtyInput.value) || 1;
             if (qty < 1) qty = 1;
@@ -185,6 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Loading state ON
+            modalPayBtn.disabled = true;
+            modalPayBtn.innerHTML = "Opening payment app...";
+
             const note = `Blanket donation (${qty} blankets) for Warm Hearts`;
             const upiUrl = createUpiUrl(total, note);
 
@@ -192,8 +195,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
 
             if (isMobile) {
-                // Mobile → try Google Pay / UPI
+                // Mobile → open UPI (Google Pay / others)
                 openUpiOnMobile(upiUrl);
+
+                // Feedback
+                setTimeout(() => {
+                    alert(
+                        "Thank you for your donation! ❤️\n\n" +
+                        "Please complete the payment of ₹" +
+                        total.toLocaleString() +
+                        " in your UPI app.\nContact us if you face any issues."
+                    );
+                    modalBackdrop.classList.remove("active");
+                }, 2000);
             } else {
                 // Desktop → show QR fallback
                 alert("UPI apps work only on mobile. Please scan this QR with your UPI app.");
@@ -202,9 +216,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     upiQrImage.src = STATIC_QR_IMAGE_SRC;
                     qrModalBackdrop.classList.add("active");
                 }
+                
+                modalBackdrop.classList.remove("active");
             }
 
-            // If you add real backend verification later, you can update:
+            // Loading state OFF
+            setTimeout(() => {
+                modalPayBtn.disabled = false;
+                modalPayBtn.innerHTML = "pay via upi";
+            }, 3000);
+
+            // Later you can update:
             // currentDonatedBlankets += qty;
             // updateGoalTracker();
         });
