@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- UPDATED UPI DETAILS BASED ON TRANSACTION IMAGE ---
     // ✅ Put YOUR mobile number here (10 digits)
-    const UPI_MOBILE = "9729504524"; 
+    const UPI_MOBILE = "8299301945"; 
 
     // ✅ Put the correct suffix here (@upi / @ybl / @okhdfcbank / @axl / @paytm etc.)
     const UPI_HANDLE_SUFFIX = "@upi";
