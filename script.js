@@ -2,68 +2,55 @@ document.addEventListener("DOMContentLoaded", () => {
     // UPI Constants
     const BLANKET_PRICE = 101; // ₹ per blanket
 
-    // --- UPDATED UPI DETAILS BASED ON TRANSACTION IMAGE ---
-    // ✅ Put YOUR mobile number here (10 digits)
-    const UPI_MOBILE = "ayushkumargupta2908"; 
-
-    // ✅ Put the correct suffix here (@upi / @ybl / @okhdfcbank / @axl / @paytm etc.)
-    const UPI_HANDLE_SUFFIX = "@oksbi";
-
-    // Auto-generated full UPI ID from mobile + suffix
-    const UPI_ID = `${UPI_MOBILE}${UPI_HANDLE_SUFFIX}`;
-    const UPI_NAME = "KRISH GOYAL";
-    // ---------------------------------------------------
+    // --- UPDATED UPI DETAILS ---
+    const UPI_ID = "9729504524@upi"; 
+    const UPI_NAME = "Kindera";
+    const FALLBACK_PHONE = "+917678459202";
+    // ---------------------------
 
     // Goal Tracking Constants
     const GOAL_BLANKETS = 500;
     let currentDonatedBlankets = 0; 
 
-    // Static QR
-    const STATIC_QR_IMAGE_SRC = "qr.png";
+    // Static QR (Fallback QR, assumes image exists)
+    const STATIC_QR_IMAGE_SRC = "qr.png"; 
+    
+    // Timer variables
+    let qrTimer;
+    let countdownInterval;
+    const TIMER_DURATION = 60; // 60 seconds
 
-    // UPI URL Helper (generic UPI link)
-    function createUpiUrl(amount, note) {
+    // --- Dynamic QR Generation FIX ---
+    function generateDynamicQrUrl(amount, note) {
+        // Using a reliable public QR code generator (e.g., QRServer.com)
         const pa = encodeURIComponent(UPI_ID);
         const pn = encodeURIComponent(UPI_NAME);
         const am = encodeURIComponent(amount);
         const tn = encodeURIComponent(note);
         const cu = "INR";
-        return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=${cu}`;
+        const upiDeeplink = `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=${cu}`;
+        
+        const encodedDeeplink = encodeURIComponent(upiDeeplink);
+        // Using 300x300 for better scan reliability
+        const qrApiBase = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=";
+        
+        return qrApiBase + encodedDeeplink;
     }
 
-    // Open UPI / Google Pay (mobile only) - stable version
-    function openUpiOnMobile(upiUrl) {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
-        const isAndroid = /Android/i.test(ua);
-        const isIOS = /iPhone|iPad|iPod/i.test(ua);
-
-        // Directly open UPI URL. GPay / PhonePe / Paytm will catch this.
-        if (isAndroid || isIOS) {
-            window.location.href = upiUrl;
-            return;
-        }
-
-        // Non-mobile handled separately (desktop → show QR)
-    }
-
-    // --- Goal Tracker Logic ---
+    // --- Goal Tracker Logic (Unchanged) ---
     const currentBlanketsSpan = document.getElementById("current-blankets");
     const goalBar = document.querySelector(".goal-bar");
 
     function updateGoalTracker() {
         if (!currentBlanketsSpan || !goalBar) return;
-
         currentBlanketsSpan.textContent = currentDonatedBlankets.toLocaleString();
-
         let percentage = (currentDonatedBlankets / GOAL_BLANKETS) * 100;
         percentage = Math.min(percentage, 100);
-
         goalBar.style.width = `${percentage}%`;
     }
-
     updateGoalTracker();
 
-    // --- Image Slider Logic ---
+    // --- Slider Logic (Unchanged) ---
     const sliderImagesSrc = [
         "https://media.istockphoto.com/id/476151350/photo/poor-children-sitting-in-winter-season.jpg?s=612x612&w=0&k=20&c=ZAiQrki3FLQNuDZ5MjpCGJ_Y3GjYeRI28gAg1ZiCspE=",
         "https://d1vdjc70h9nzd9.cloudfront.net/media/campaign/547000/547803/image/61a9f0789f1f9.jpeg",
@@ -97,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 4500);
     }
 
-    // --- Donate Modal Logic ---
+    // --- Modal Quantity & Total Logic (Unchanged) ---
     const donateBtn = document.getElementById("open-donate-modal");
     const modalBackdrop = document.getElementById("donate-modal");
     const modalClose = document.getElementById("close-modal");
@@ -109,10 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateModalTotal() {
         if (!modalQtyInput || !modalTotalSpan) return;
-
         let qty = parseInt(modalQtyInput.value) || 1;
         
-        // Ensure buttons reflect the correct boundaries
         if (modalDecrease) modalDecrease.disabled = (qty <= 1);
         if (modalIncrease) modalIncrease.disabled = (qty >= 100);
 
@@ -120,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modalTotalSpan.textContent = `₹${total.toLocaleString()}`;
     }
 
+    // Modal open/close logic (Unchanged)
     if (donateBtn && modalBackdrop && modalQtyInput && modalTotalSpan) {
         donateBtn.addEventListener("click", () => {
             modalBackdrop.classList.add("active");
@@ -127,36 +113,28 @@ document.addEventListener("DOMContentLoaded", () => {
             updateModalTotal();
         });
     }
-
     if (modalClose && modalBackdrop) {
-        modalClose.addEventListener("click", () => {
-            modalBackdrop.classList.remove("active");
-        });
+        modalClose.addEventListener("click", () => modalBackdrop.classList.remove("active"));
     }
-
     if (modalBackdrop) {
         modalBackdrop.addEventListener("click", (e) => {
-            if (e.target === modalBackdrop) {
-                modalBackdrop.classList.remove("active");
-            }
+            if (e.target === modalBackdrop) modalBackdrop.classList.remove("active");
         });
     }
 
+    // Quantity buttons/input logic (Unchanged)
     if (modalDecrease && modalQtyInput) {
         modalDecrease.addEventListener("click", () => {
             modalQtyInput.value = Math.max(1, (parseInt(modalQtyInput.value) || 1) - 1);
             updateModalTotal();
         });
     }
-
     if (modalIncrease && modalQtyInput) {
         modalIncrease.addEventListener("click", () => {
             modalQtyInput.value = Math.min(100, (parseInt(modalQtyInput.value) || 1) + 1);
             updateModalTotal();
         });
     }
-
-    // --- Input Validation ---
     if (modalQtyInput) {
         modalQtyInput.addEventListener("input", (e) => {
             let val = parseInt(e.target.value);
@@ -172,9 +150,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const qrModalBackdrop = document.getElementById("qr-modal");
     const closeQrModalBtn = document.getElementById("close-qr-modal");
     const upiQrImage = document.getElementById("upi-qr-image");
+    const qrNote = document.getElementById("qr-note");
+    const qrTimerText = document.getElementById("qr-timer-text");
+    const qrAmountText = document.getElementById("qr-amount-text"); 
+    
+    // Function to close the QR modal
+    function closeQrModal() {
+        if (qrTimer) clearTimeout(qrTimer); 
+        if (countdownInterval) clearInterval(countdownInterval);
+        qrModalBackdrop.classList.remove("active");
+    }
 
-    // Pay Button Logic
-    if (modalPayBtn && modalQtyInput && modalBackdrop) {
+    // Function to start the 60-second countdown
+    function startCountdown() {
+        if (countdownInterval) clearInterval(countdownInterval);
+        let seconds = TIMER_DURATION;
+        qrTimerText.innerHTML = `This code is valid for <strong>${seconds}</strong> seconds.`;
+
+        countdownInterval = setInterval(() => {
+            seconds--;
+            if (seconds > 0) {
+                qrTimerText.innerHTML = `This code is valid for <strong>${seconds}</strong> seconds.`;
+            } else {
+                clearInterval(countdownInterval);
+                qrTimerText.innerHTML = "Code **EXPIRED**. Please close and try again.";
+            }
+        }, 1000);
+    }
+
+    // QR Modal close logic
+    if (closeQrModalBtn) {
+        closeQrModalBtn.addEventListener("click", closeQrModal);
+    }
+    if (qrModalBackdrop) {
+        qrModalBackdrop.addEventListener("click", (e) => {
+            if (e.target === qrModalBackdrop) {
+                closeQrModal();
+            }
+        });
+    }
+
+    // --- Pay Button Logic (Generates Dynamic QR and Timer) ---
+    if (modalPayBtn && modalQtyInput && modalBackdrop && qrModalBackdrop && upiQrImage) {
         modalPayBtn.addEventListener("click", () => {
             let qty = parseInt(modalQtyInput.value) || 1;
             if (qty < 1) qty = 1;
@@ -186,73 +203,69 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Loading state ON
+            // 1. Loading state ON
             modalPayBtn.disabled = true;
-            modalPayBtn.innerHTML = "Opening payment app...";
+            modalPayBtn.innerHTML = "Generating QR...";
+            
+            // Close donation modal
+            modalBackdrop.classList.remove("active");
 
-            const note = `Blanket donation (${qty} blankets) for Warm Hearts`;
-            const upiUrl = createUpiUrl(total, note);
+            // 2. Generate Dynamic QR URL and Fallback Note
+            const note = `Blanket donation (${qty} blankets) for Warm Hearts - ₹${total}`;
+            const dynamicQrUrl = generateDynamicQrUrl(total, note);
+            
+            // 🟢 UPDATED FALLBACK CONTENT WITH TROUBLESHOOTING 🟢
+            const fallbackContent = `
+                <p>⚠️ Troubleshooting: If your scan fails (e.g., Google Pay), try these steps:</p>
+                <ul class="qr-troubleshoot-list">
+                    <li>Try scanning with a different app (PhonePe/Paytm).</li>
+                    <li>Ensure your screen brightness is high and there's no glare.</li>
+                    <li>**Manual Pay:** Use the UPI details below.</li>
+                </ul>
+                <p>
+                    Manual UPI ID: <strong>${UPI_ID}</strong><br>
+                    Contact: <strong>${FALLBACK_PHONE}</strong> (Call/WhatsApp)
+                </p>
+            `;
 
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+            // 3. Show QR Modal with Dynamic Image & Note
+            upiQrImage.src = dynamicQrUrl;
+            qrAmountText.innerHTML = `Amount: ₹${total.toLocaleString()}`; // Set prominent amount
+            qrNote.innerHTML = fallbackContent;
+            qrModalBackdrop.classList.add("active");
+            
+            // 4. Set 60-second timer and start countdown
+            startCountdown(); // Start the visual timer
 
-            if (isMobile) {
-                // Mobile → open UPI (Google Pay / others)
-                openUpiOnMobile(upiUrl);
+            if (qrTimer) clearTimeout(qrTimer); // Clear previous timer
+            qrTimer = setTimeout(() => {
+                closeQrModal();
+                alert("The payment QR code has expired. Please click 'Donate Now' again to generate a new QR.");
+            }, TIMER_DURATION * 1000);
 
-                // Feedback - Updated to be less definitive about success
-                setTimeout(() => {
-                    alert(
-                        "Redirecting to your UPI app! Please complete the payment of ₹" +
-                        total.toLocaleString() +
-                        ".\n\n" +
-                        "If the payment fails (e.g., due to bank limits), please try again or use the static QR option on desktop."
-                    );
-                    modalBackdrop.classList.remove("active");
-                }, 2000);
-            } else {
-                // Desktop → show QR fallback
-                alert("UPI apps work only on mobile. Please scan this QR with your UPI app.");
-
-                if (qrModalBackdrop && upiQrImage) {
-                    upiQrImage.src = STATIC_QR_IMAGE_SRC;
-                    qrModalBackdrop.classList.add("active");
-                }
-                
-                modalBackdrop.classList.remove("active");
-            }
-
-            // Loading state OFF
+            // 5. Loading state OFF
             setTimeout(() => {
                 modalPayBtn.disabled = false;
-                modalPayBtn.innerHTML = "pay via upi";
-            }, 3000);
-
-            // Later you can update:
-            // currentDonatedBlankets += qty;
-            // updateGoalTracker();
+                modalPayBtn.innerHTML = "Generate QR & Pay";
+            }, 1000); 
         });
     }
 
-    // --- QR Modal Logic ---
+    // --- Static QR Button Logic ---
     if (showQrBtn && qrModalBackdrop && upiQrImage) {
         showQrBtn.addEventListener("click", () => {
+             // Set static QR and clear any existing timers.
             upiQrImage.src = STATIC_QR_IMAGE_SRC;
+            closeQrModal(); // Ensure timers are stopped before showing static
             qrModalBackdrop.classList.add("active");
-        });
-    }
+            qrTimerText.innerHTML = "This is a generic QR code.";
+            qrAmountText.innerHTML = ``; // Clear amount display
 
-    if (closeQrModalBtn && qrModalBackdrop) {
-        closeQrModalBtn.addEventListener("click", () => {
-            qrModalBackdrop.classList.remove("active");
-        });
-    }
-
-    if (qrModalBackdrop) {
-        qrModalBackdrop.addEventListener("click", (e) => {
-            if (e.target === qrModalBackdrop) {
-                qrModalBackdrop.classList.remove("active");
-            }
+            qrNote.innerHTML = `
+                ⚠️ IMPORTANT: This is a generic QR. You MUST manually enter the amount. 
+                <br>Manual UPI ID: <strong>${UPI_ID}</strong> 
+                <br>Contact: <strong>${FALLBACK_PHONE}</strong>
+            `;
         });
     }
 });
