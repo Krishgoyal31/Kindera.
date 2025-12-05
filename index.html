@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Warm Hearts Blanket Drive</title>
-    <!-- Google Font: Inter for a modern look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -34,14 +33,62 @@
                 <div class="hero-right">
                     <div class="slider-card">
                         <div class="slider-viewport">
-                            <!-- js will insert <img> elements here -->
-                        </div>
+                            </div>
                         <div class="slider-caption">
-                            <!-- Removed content -->
+                            <div class="highlight">See the Impact</div>
+                            <div>#WarmHearts</div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="section-separator"></div>
+
+            <section class="info-section">
+                <div class="goal-tracker-container">
+                    <p class="goal-text">
+                        Blanket Goal: <span id="current-blankets">0</span> / 500 blankets donated.
+                    </p>
+                    <div class="goal-bar-wrapper">
+                        <div class="goal-bar" style="width: 0%;"></div>
+                    </div>
+                    <p class="goal-motto">
+                        "A single blanket can save a life."
+                    </p>
+                    <p class="donation-action-line">
+                        ✨Every 10 blankets donated, we distribute immediately.
+                    </p>
+                </div>
+
+                <div class="about-and-gallery">
+                    <div class="about-us-box">
+                        <h3 class="section-heading">Our Mission</h3>
+                        <p>
+                            We are Kindera, a non-profit initiative dedicated to fighting the cold among homeless communities and underprivileged children. We believe basic warmth is a fundamental human right. Every rupee goes directly towards sourcing and distributing high-quality blankets.
+                        </p>
+                        <p class="moto-text">
+                            Our Key Motto: Kindness is the ultimate currency.
+                        </p>
+                    </div>
+                    <div class="gallery-box">
+                        <h3 class="section-heading">Donor Gallery & Thanks</h3>
+                        <p>
+                            We thank all our amazing donors! See your blanket making a difference.
+                        </p>
+                        <a 
+                            href="YOUR_GOOGLE_DRIVE_LINK_HERE" 
+                            target="_blank" 
+                            class="btn primary-btn gallery-btn"
+                            rel="noopener noreferrer"
+                        >
+                            <span class="btn-icon">📸</span> View Photos & Videos
+                        </a>
+                        <p class="gallery-note">
+                            *Note: Photos are shared with permission from the beneficiaries.
+                        </p>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -66,7 +113,6 @@
         </div>
     </div>
 
-    <!-- UPI QR Code Modal -->
     <div class="qr-modal-backdrop" id="qr-modal">
         <div class="qr-modal">
             <button class="modal-close" id="close-qr-modal">&times;</button>
@@ -75,11 +121,10 @@
             <div class="qr-code-container">
                 <img id="upi-qr-image" src="" alt="UPI QR Code for donation">
             </div>
-            <p class="modal-small-text">Note: Amount will be filled automatically for the chosen quantity in the donate modal, or you can adjust it manually.</p>
+            <p class="modal-small-text">Note: The amount will be pre-filled based on your last selection in the donate modal.</p>
         </div>
     </div>
 
-    <!-- Floating Contact Buttons -->
     <div class="floating-contact-buttons">
         <a href="tel:+919729504524" class="fab-icon call" aria-label="Call Us">📞</a>
         <a
